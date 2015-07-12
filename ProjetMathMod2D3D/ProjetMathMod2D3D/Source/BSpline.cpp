@@ -3,15 +3,16 @@
 BSpline::BSpline()
 {
 	_accuracy = 20.0f;
-	_degree = 3;
+	_degree = 2;
 
 	//_nodalVector = std::vector<float>();
 	//_normalizedNodalVector = std::vector<float>();
 
 	//_controlPoint = std::vector<Point>();
 	//_bSplineCurve = std::vector<Point>();
-}
 
+	_closedBSpline = true;
+}
 
 BSpline::~BSpline()
 {
@@ -57,7 +58,7 @@ void BSpline::generateVecteurNodal()
 		_nodalVector.reserve(nbNode);
 
 		for (unsigned int i = 0; i < nbNode; ++i)
-			this->_nodalVector.push_back(i);
+			_nodalVector.push_back(i);
 
 		generateNormalizedNodalVector();
 	}
@@ -99,7 +100,10 @@ void BSpline::generateBSplineCurve()
 			_bSplineCurve.clear();
 
 		if (nbNode != (nbControlPoint + _degree + 1))
+		{
 			generateVecteurNodal();
+			nbNode = _nodalVector.size();
+		}
 
 		float stepIncrement = 1.0f / _accuracy;
 
@@ -134,4 +138,30 @@ void BSpline::generateBSplineCurve()
 	}
 	else
 		std::cout << "Erreur lors de la creation du la B-spline - Pas assez de point de controle" << std::endl;
+}
+
+void BSpline::closeBSpline()
+{
+	int nbPoint = _bSplineCurve.size();
+
+	if (nbPoint > 0)
+	{
+		if (_closedBSpline)
+		{
+			if (nbPoint > 3)
+			{
+				if (_bSplineCurve[0] != _bSplineCurve[nbPoint - 1])
+					_bSplineCurve.push_back(_bSplineCurve[0]);
+			}
+			else
+				std::cout << "Erreur fermeture B-spline - Impossible de fermer une forme avec moins de 3 points" << std::endl;
+		}
+		else
+		{
+			if (_bSplineCurve[0] == _bSplineCurve[nbPoint - 1])
+				_bSplineCurve.pop_back();
+		}
+	}
+	else
+		std::cout << "Erreur fermeture B-spline - Impossible de fermer une forme sans points" << std::endl;
 }

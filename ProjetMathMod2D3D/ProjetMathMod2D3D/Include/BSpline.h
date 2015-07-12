@@ -2,7 +2,10 @@
 
 #include <vector>
 
+//#include "Includer.h"
 #include "Point.h"
+//#include "Extrude.h"
+
 
 class BSpline
 {
@@ -13,6 +16,10 @@ class BSpline
 		std::vector<float> _normalizedNodalVector;
 		std::vector<Point> _controlPoints;
 		std::vector<Point> _bSplineCurve;
+
+		bool _closedBSpline;
+
+		//Extrude _bSplineExtruder;
 
 	public:
 		//Constructor & Destructor
@@ -50,37 +57,57 @@ class BSpline
 			_bSplineCurve = bSplineCurve;
 		}
 
+		void setClosedBSpline(bool value)
+		{
+			_closedBSpline = value;
+		}
+
+		//void setBSplineExtruder(Extrude extrude)
+		//{
+		//	_bSplineExtruder = extrude;
+		//}
+
+
 		//Getter
-		float getAccuracy()
+		float& getAccuracy()
 		{
 			return _accuracy;
 		}
 
-		int getDeDegree()
+		int& getDeDegree()
 		{
 			_degree = _degree;
 		}
 
-		std::vector<int> getNodalVector()
+		std::vector<int>& getNodalVector()
 		{
 			return _nodalVector;
 		}
 
-		std::vector<float> getNormalizedNodalVector()
+		std::vector<float>& getNormalizedNodalVector()
 		{
 			return _normalizedNodalVector;
 		}
 
-		std::vector<Point> getControlPoint()
+		std::vector<Point>& getControlPoint()
 		{
 			return _controlPoints;
 		}
 
-		std::vector<Point> getBSplineCurve()
+		std::vector<Point>& getBSplineCurve()
 		{
 			return _bSplineCurve;
 		}
 
+		bool& getClosedBSpline()
+		{
+			return _closedBSpline;
+		}
+
+		//Extrude& getBSplineExtruder()
+		//{
+		//	return _bSplineExtruder;
+		//}
 
 		void addControlPoint(const Point point);
 		void generateVecteurNodal();
@@ -88,26 +115,6 @@ class BSpline
 
 		float deBoor(int p, int i,float t);
 		void generateBSplineCurve();
-		/*
-			p = 3
-			n = 10 (On a n+1 noeuds dans le vecteur nodal)
 
-			n-p = 7 points de controle (P0 à P6) 
-			n+1 = 11 noeuds dans le vecteur nodal
-		*/
-
-		/*
-			p = degré BSpline
-			pas : ti+1 = ti + pas
-			n-p = nb Point controle (On a n+1 noeud sur le vecteur nodal)
-			n+1 = nb Noeud vecteur nodal
-			i = index vecteur nodal --> 0 <= i <= n-p-i
-
-			B = Base B-Spline --> B != 0 sur [Noeud(i), Noeud(i+1+p)[
-		*/
-
-		/*
-			Boucler avec tp <= t <= tn-p --> partition de l'unité
-			Pas : ti+1 = ti + pas
-		*/
+		void closeBSpline();
 };

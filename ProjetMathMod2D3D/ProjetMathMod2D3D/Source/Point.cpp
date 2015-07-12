@@ -70,6 +70,16 @@ float Point::getZ() const
 	return this->_z;
 }
 
+float Point::dot(const Point& point)const
+{
+	return (_x * (point._x)) + (_y * (point._y) + (_z * (point._z)));
+}
+
+float Point::norm()const
+{
+	return sqrt(this->dot(*this));
+}
+
 float Point::distance(const Point & point) const
 {
 	return sqrt(((this->_x - point._x)*(this->_x - point._x)) + ((this->_y - point._y)*(this->_y - point._y)) + ((this->_z - point._z)*(this->_z - point._z)));

@@ -15,18 +15,17 @@
 
 #include "Include/Point.h"
 #include "Include/BSpline.h"
+#include "Include/Extrude.h"
 
 int main(int argc, char** argv)
 {
 	std::cout << std::endl;
-
 	std::cout << "--------- BEGIN ----------" << std::endl;
-
 	std::cout << std::endl;
 
 	BSpline b;
 
-	b.addControlPoint(Point());
+	b.addControlPoint(Point(-1.0f, 0.0f, 0.0f));
 	b.addControlPoint(Point(2.0f, 5.0f, 0.0f));
 	b.addControlPoint(Point(4.0f, 5.0f, 0.0f));
 	b.addControlPoint(Point(6.0f, 0.0f, 0.0f));
@@ -44,10 +43,23 @@ int main(int argc, char** argv)
 
 	b.generateBSplineCurve();
 
+	b.setClosedBSpline(true);
+	//b.setClosedBSpline(false);
+	b.closeBSpline();
+
 	for (unsigned int i = 0; i < b.getBSplineCurve().size(); ++i)
 	{
 		std::cout << b.getBSplineCurve()[i] << std::endl;
 	}
+
+	std::cout << std::endl;
+	std::cout << "--------------------------" << std::endl;
+	std::cout << std::endl;
+
+	Extrude ext = Extrude();
+
+	for (unsigned int i = 0; i < ext.getGeneralizedExtrudeBSpline().getBSplineCurve().size(); ++i)
+		std::cout << ext.getGeneralizedExtrudeBSpline().getBSplineCurve()[i] << std::endl;
 
 
 	std::cout << std::endl;

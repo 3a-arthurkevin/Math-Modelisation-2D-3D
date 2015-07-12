@@ -29,6 +29,8 @@ class Point
 		float getY() const;
 		float getZ() const;
 
+		float dot(const Point& point)const;
+		float norm()const;
 		float distance(const Point & point) const;
 
 		Point & operator+=(const Point & point);

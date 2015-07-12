@@ -84,10 +84,13 @@
   <ItemGroup>
     <ClCompile Include="ProjetMathMod2D3D.cpp" />
     <ClCompile Include="Source\BSpline.cpp" />
+    <ClCompile Include="Source\Extrude.cpp" />
     <ClCompile Include="Source\Point.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\BSpline.h" />
+    <ClInclude Include="Include\Extrude.h" />
+    <ClInclude Include="Include\Includer.h" />
     <ClInclude Include="Include\Point.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
