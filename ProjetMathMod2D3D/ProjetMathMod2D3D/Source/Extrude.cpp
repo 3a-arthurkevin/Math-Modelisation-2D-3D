@@ -13,7 +13,6 @@ Extrude::Extrude()
 		_bSplineExtrude.getControlPoint().push_back(Point(static_cast<float>(i), 0.00f, 0.00f));
 
 	_bSplineExtrude.generateBSplineCurve();
-
 }
 
 
@@ -23,6 +22,13 @@ Extrude::~Extrude()
 
 std::vector<Point> Extrude::simpleExtrude(const std::vector<Point> bSplineCurve, const bool closedCurve, const float height)
 {
+	/*
+		Extrusion le long de l'axe Z
+		On extude vers le bas pas après pas sur une hauteur déterminer
+		On extrude de 0 à height
+		On applique un coefficient d'agrandissement ou réduction lors de l'extude
+	*/
+
 	std::vector<Point> shape;
 
 	float stepIncrement = 1.00f / _accuracy;
@@ -50,6 +56,12 @@ std::vector<Point> Extrude::simpleExtrude(const std::vector<Point> bSplineCurve,
 
 std::vector<Point> Extrude::revolvingExtrude(const std::vector<Point> bSplineCurve, const bool closedCurve)
 {
+	/*
+		Extrusion au tour de l'axe Z
+		On décale de pas en pas (un pas équivaux à un agrandissement de l'angle)
+		On extrude de 0 à 360° --> de 0 à 2Pi
+	*/
+
 	std::vector<Point> shape;
 
 	float angleIncrement = 1.00f / _accuracy;
@@ -77,6 +89,15 @@ std::vector<Point> Extrude::revolvingExtrude(const std::vector<Point> bSplineCur
 
 std::vector<Point> Extrude::generalizedExtrude(const std::vector<Point> bSplineCurve, const std::vector<Point> bSplineCurveController, const bool closedCurve)
 {
+	/*
+		La courbe B-Spline à extrude suit l'autre courbe B-Spline de controle
+		Pour faire cette extrude, on doit parcourir la B-Spline de controle point par point
+			Récupérer le vecteur tangeant à chaque pas
+				(Cas particulier pour le 1er et dernier points)
+			Récupérer le vecteur normal à partir du vecteur tangeant pour le calcule
+				(Le vecteur k est connu car la B-Spline de controle est inclu dans le plan z = 0 --> tous les points de la B-Spline de controle on z = 0)
+	
+	*/
 	std::vector<Point> shape;
 	Point pointToAdd;
 
@@ -117,26 +138,55 @@ std::vector<Point> Extrude::generalizedExtrude(const std::vector<Point> bSplineC
 
 std::vector<int> Extrude::generateTriangularFacesIndex(const std::vector<Point> shape, const unsigned int width, const unsigned int height)
 {
+	/*
+		Lors de la génération des points d'une forme
+		Les points sont fait lignes par ligne c'est à dire 
+
+		Exemple face composé de 2 triangles
+		._____.
+		|   / |
+		| /   |
+		._____.
+
+		On parcours ligne par ligne (on applique un -1 à width et height dans les boucles pour ne pas sortir du tableau !)
+		Opération bizarre pour obtenir les sommets parce qu'on est dans un tableau 1D contenant tous les points (pareil que pour les matrices)
+	*/
 
 	std::vector<int> triangluarFacesIndex;
 
 	int index1, index2, index3;
 
-	for (unsigned int i = 0; i < width - 1; ++i)
+	for (unsigned int i = 0; i < height - 1; ++i)
 	{
-		for (unsigned int j = 0; j < height - 1; ++j)
+		for (unsigned int j = 0; j < width - 1; ++j)
 		{
-			index1 = ( (   i    * (height + 1)) +    j    );
-			index2 = ( ((i + 1) * (height + 1)) +    j    );
-			index3 = ( ((i + 1) * (height + 1)) + (j + 1) );
+			index1 = ( (   i    * (width + 1)) +    j    );
+			index2 = ( ((i + 1) * (width + 1)) +    j    );
+			index3 = ( ((i + 1) * (width + 1)) + (j + 1) );
+			/*
+			         (index3)
+                        .
+					  / |
+					/   |
+			      ._____. 
+			(index1)   (index2)
+			*/
 
 			triangluarFacesIndex.push_back(index1);
 			triangluarFacesIndex.push_back(index2);
 			triangluarFacesIndex.push_back(index3);
 
-			index1 = ( (   i    * (height + 1)) +    j    );
-			index2 = ( ((i + 1) * (height + 1)) + (j + 1) );
-			index3 = ( (   i    * (height + 1)) + (j + 1) );
+			index1 = ( (   i    * (width + 1)) +    j    );
+			index2 = ( ((i + 1) * (width + 1)) + (j + 1) );
+			index3 = ( (   i    * (width + 1)) + (j + 1) );
+			/*
+			 (index3)   (index2)
+                  ._____.
+			      |   /
+				  | /
+			      .
+			   (index1)   
+			*/
 
 			triangluarFacesIndex.push_back(index1);
 			triangluarFacesIndex.push_back(index2);

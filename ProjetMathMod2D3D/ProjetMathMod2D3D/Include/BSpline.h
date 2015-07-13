@@ -10,14 +10,14 @@
 class BSpline
 {
 	private:
-		float _accuracy;
-		int _degree;
-		std::vector<int> _nodalVector;
-		std::vector<float> _normalizedNodalVector;
-		std::vector<Point> _controlPoints;
-		std::vector<Point> _bSplineCurve;
+		float _accuracy;								// Précision lors de la génération du la B-SPline (parcours du vecteur nodal)
+		int _degree;									// Degré de la B-Spline
+		std::vector<int> _nodalVector;					// Vecteur nodal sur un interval [a, b] --> (a et b sont des réels)
+		std::vector<float> _normalizedNodalVector;		// Vecteur nodal rapporté sur un interval [0, 1] (valeur réel entre 0.00f et 1.00f)
+		std::vector<Point> _controlPoints;				// Points de controles servant à générer la B-Spline
+		std::vector<Point> _bSplineCurve;				// B-Spline obtenue
 
-		bool _closedBSpline;
+		bool _closedBSpline;							// Décide si la B-Spline est une forme fermé ou ouverte
 
 		//Extrude _bSplineExtruder;
 
@@ -109,12 +109,18 @@ class BSpline
 		//	return _bSplineExtruder;
 		//}
 
+		//Ajoute un Point de controle à la liste des points de controles
 		void addControlPoint(const Point point);
+		//Génère la vecteur nodal arbitrairement selon le nombre de points de controles et le degré
 		void generateVecteurNodal();
+		//Génère la vecteur nodal sur l'interval [0, 1]
 		void generateNormalizedNodalVector();
 
+		// Algorithme deBoor générant un réel 
 		float deBoor(int p, int i,float t);
+		// Génère la courve B-Spline selon les points de controle, le vecteur nodal et le degré
 		void generateBSplineCurve();
 
+		//Fermeture ou ouvertue de la B-Spline
 		void closeBSpline();
 };

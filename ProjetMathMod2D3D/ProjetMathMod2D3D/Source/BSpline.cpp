@@ -26,6 +26,12 @@ void BSpline::addControlPoint(const Point point)
 //Rapport le vecteur nodal sur un interface [a,b] à un interval [0,1]
 void BSpline::generateNormalizedNodalVector()
 {
+	/*
+		[1---x---y---z---10] (schéma vecteur nodal)
+		Pour rapporter une valeur x du vecteur nodal dans un interval [0, 1]
+		Si les valeurs aux extrémités du vecteur nodal sont 1 et 10
+		Alors le calcul à faire est ((x-1) / (10-1))
+	*/
 	unsigned int nbNode = _nodalVector.size();
 
 	if (nbNode >= 2)
@@ -48,6 +54,12 @@ void BSpline::generateNormalizedNodalVector()
 // Créer un vecteur nodal par défaut
 void BSpline::generateVecteurNodal()
 {
+	/*
+		On connait le nombre de points de controle (nbPC) et le degré (p)
+		Soit n+1 le nombre de noeud dans le vecteur nodal (n est le nombre d'interval sur le vecteur nodal)
+		D'après la formule du cours --> n - p = NbPC
+		Donc n = NbPC + p
+	*/
 	unsigned int nbControlPoint = _controlPoints.size();
 
 	if (nbControlPoint >= 2)
@@ -66,8 +78,25 @@ void BSpline::generateVecteurNodal()
 		std::cout << "Erreur lors de la creation du vecteur nodal - Pas assez de point de controle" << std::endl;
 }
 
+// Fonction récursive effectuant l'algorithme deBoor
 float BSpline::deBoor(int p, int i, float t)
 {	
+	/*
+		Soit le degré p, l'index du noeud courant i et la valeur courante de parcourt du vecteur nodal t
+
+		Si le degrée p est égal à 0 Alors
+			Si t est compris entre la valeur du noeud courant et la valeur du noeud suivant
+				retourner 1
+			sinon 
+				retourner 0
+		Sinon (Récursion)
+			On vérifie si il n'y a pas de valeur interdite au dénominateur pour calculer la Base B-Spline
+			Si valeur interdite
+				retourner 0
+			sinon
+				récussion (voir formule dans le cours pdf --> c'est compliquer/embetant à écrire)
+	*/
+
 	if (p == 0)
 	{
 		if ((t >= _normalizedNodalVector[i]) && (t < _normalizedNodalVector[i + 1]))
@@ -142,6 +171,11 @@ void BSpline::generateBSplineCurve()
 
 void BSpline::closeBSpline()
 {
+	/*
+		Fermeture de la B-Spline seulement si on a 3 points au moins
+		Pour fermer une courbe, le 1er et dernier point doivent etre identique
+	*/
+
 	int nbPoint = _bSplineCurve.size();
 
 	if (nbPoint > 0)

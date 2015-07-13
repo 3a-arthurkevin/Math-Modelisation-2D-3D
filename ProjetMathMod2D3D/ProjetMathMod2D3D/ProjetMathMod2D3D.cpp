@@ -19,6 +19,7 @@
 
 int main(int argc, char** argv)
 {
+	/*
 	std::cout << std::endl;
 	std::cout << "--------- BEGIN ----------" << std::endl;
 	std::cout << std::endl;
@@ -65,6 +66,7 @@ int main(int argc, char** argv)
 	std::cout << std::endl;
 	std::cout << "--------- END ----------" << std::endl;
 	std::cout << std::endl;
+	*/
 
 	std::cin.ignore();
 

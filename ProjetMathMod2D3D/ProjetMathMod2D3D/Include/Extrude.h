@@ -14,10 +14,10 @@
 class Extrude
 {
 	private:
-		float _accuracy;
-		bool _closedCurve;
-		float _coefficient;
-		BSpline _bSplineExtrude;
+		float _accuracy;				// Précision lors de l'extrude
+		bool _closedCurve;				// Fermeture de la courbe 
+		float _coefficient;				// Coefficient pour l'extrude sur un axe
+		BSpline _bSplineExtrude;		// B-Spline pour l'extrude généralisé
 
 	public:
 		Extrude();
@@ -55,10 +55,14 @@ class Extrude
 			return _bSplineExtrude;
 		}
 
+		// Génération de la nouvelle forme avec un extrude le long d'un axe (l'axe Z !)
 		std::vector<Point> simpleExtrude(const std::vector<Point> bSplineCurve, const bool closedCurve, const float height);
+		// Génération de la nouvelle forme avec un extrude tourant autour d'un axe (l'axe Z !)
 		std::vector<Point> revolvingExtrude(const std::vector<Point> bSplineCurve, const bool closedCurve);
+		// Génération de la nouvelle forme avec un extrude le long d'un B-Spline (B-Spline sur le plan z = 0 --> tous ses points doit avoir z = 0.00f !)
 		std::vector<Point> generalizedExtrude(const std::vector<Point> bSplineCurve, const std::vector<Point> bSplineCurveController, const bool closedCurve);
 
+		// Génération de la liste contenant l'indice des faces triangulaires à générer
 		std::vector<int> generateTriangularFacesIndex(const std::vector<Point> shape, const unsigned int width, const unsigned int height);
 };
 
