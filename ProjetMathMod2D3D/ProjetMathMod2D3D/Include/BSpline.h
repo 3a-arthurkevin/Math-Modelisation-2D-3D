@@ -4,10 +4,11 @@
 
 //#include "Includer.h"
 #include "Point.h"
+#include "util.hpp"
 //#include "Extrude.h"
 
 
-class BSpline
+class BSpline : Util
 {
 	private:
 		float _accuracy;								// Précision lors de la génération du la B-SPline (parcours du vecteur nodal)
@@ -123,4 +124,7 @@ class BSpline
 
 		//Fermeture ou ouvertue de la B-Spline
 		void closeBSpline();
+
+		void drawControlPoints(int length = 5);
+		void drawBSplineCurve();
 };

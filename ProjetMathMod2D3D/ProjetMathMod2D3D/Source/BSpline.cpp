@@ -21,6 +21,7 @@ BSpline::~BSpline()
 void BSpline::addControlPoint(const Point point)
 {
 	_controlPoints.push_back(point);
+	drawRect(point.getX(), point.getY(), 10);
 }
 
 //Rapport le vecteur nodal sur un interface [a,b] à un interval [0,1]
@@ -198,4 +199,30 @@ void BSpline::closeBSpline()
 	}
 	else
 		std::cout << "Erreur fermeture B-spline - Impossible de fermer une forme sans points" << std::endl;
+}
+
+void BSpline::drawControlPoints(int length)
+{
+	for (auto it = _controlPoints.begin(); it != _controlPoints.end(); ++it)
+		drawRect((*it).getX(), (*it).getY(), length);
+}
+
+void BSpline::drawBSplineCurve()
+{
+	if (_bSplineCurve.size() >= 3)
+	{
+		for (int i = 0; i < _bSplineCurve.size(); ++i)
+		{
+			if (i == _bSplineCurve.size() - 1)
+			{
+				if (_closedBSpline && i > 3)
+					drawLine(_bSplineCurve[i], _bSplineCurve[0]);
+				else
+					break;
+			}
+			else
+				drawLine(_bSplineCurve[i], _bSplineCurve[i + 1]);
+		}
+	}
+	
 }

@@ -94,6 +94,7 @@
     <ClInclude Include="Include\Extrude.h" />
     <ClInclude Include="Include\Includer.h" />
     <ClInclude Include="Include\Point.h" />
+    <ClInclude Include="Include\util.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
