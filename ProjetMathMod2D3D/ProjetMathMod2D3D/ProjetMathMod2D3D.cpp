@@ -118,7 +118,7 @@ void init()
 bool toto = false;
 void myMouse(int button, int state, int x, int y)
 {
-	Point p = convert(Point(x, y, 0));
+	Point p = convert(Point(static_cast<float>(x), static_cast<float>(y), 0.f));
 	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
 	{
 		std::cout << "ajout d'un point de controle en : (" << p.getX() << ", " << p.getY() << ", " << p.getZ() << ") " << std::endl;
@@ -130,7 +130,8 @@ void myMouse(int button, int state, int x, int y)
 			(*bSplines)[0]->generateBSplineCurve();
 
 			(*bSplines)[0]->setClosedBSpline(false);
-			//b.setClosedBSpline(false);
+			(*bSplines)[0]->setAccuracy(100.f);
+			(*bSplines)[0]->setDegree(3);
 			(*bSplines)[0]->closeBSpline();
 
 		}
@@ -148,7 +149,7 @@ void myKeyboard(unsigned char key, int x, int y)
 }
 void myDisplay()
 {
-	glColor3f(0.4, 0.4, 0.4);
+	glColor3f(0.4f, 0.4f, 0.4f);
 	glClear(GL_COLOR_BUFFER_BIT);
 	for (auto it = bSplines->begin(); it < bSplines->end(); ++it)
 	{

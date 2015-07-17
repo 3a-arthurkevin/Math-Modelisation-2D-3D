@@ -33,7 +33,7 @@ class BSpline : Util
 			_accuracy = value;
 		}
 
-		void setDeDegree(float value)
+		void setDegree(int value)
 		{
 			_degree = _degree;
 		}

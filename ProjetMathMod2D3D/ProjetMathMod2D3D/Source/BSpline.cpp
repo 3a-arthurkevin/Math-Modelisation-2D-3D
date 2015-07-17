@@ -2,7 +2,7 @@
 
 BSpline::BSpline()
 {
-	_accuracy = 20.0f;
+	_accuracy = 100.0f;
 	_degree = 2;
 
 	//_nodalVector = std::vector<float>();
@@ -111,8 +111,8 @@ float BSpline::deBoor(int p, int i, float t)
 	float tIPlusOnePlusP = _normalizedNodalVector[i + 1 + p];
 	float tIPlusOne = _normalizedNodalVector[i + 1];
 
-	bool left = (tIPlusP - tI < 0.000001) && (tIPlusP - tI > -0.000001);
-	bool right = (tIPlusOnePlusP - tIPlusOne < 0.000001) && (tIPlusOnePlusP - tIPlusOne > -0.000001);
+	bool left = (tIPlusP - tI < 0.001f) && (tIPlusP - tI > -0.001f);
+	bool right = (tIPlusOnePlusP - tIPlusOne < 0.001f) && (tIPlusOnePlusP - tIPlusOne > -0.001f);
 	if (left || right)
 		return 0;
 
@@ -122,30 +122,30 @@ float BSpline::deBoor(int p, int i, float t)
 void BSpline::generateBSplineCurve()
 {
 	unsigned int nbControlPoint = _controlPoints.size();
-	unsigned int nbNode = _nodalVector.size();
+	unsigned int nbInterval = _nodalVector.size() - 1;
 
 	if (nbControlPoint > 0)
 	{
 		if (!_bSplineCurve.empty())
 			_bSplineCurve.clear();
 
-		if (nbNode != (nbControlPoint + _degree + 1))
+		if (nbInterval != (nbControlPoint + _degree))
 		{
 			generateVecteurNodal();
-			nbNode = _nodalVector.size();
+			nbInterval = _nodalVector.size() - 1;
 		}
 
 		float stepIncrement = 1.0f / _accuracy;
 
 		float nodePValue = _normalizedNodalVector[_degree];
-		float nodeNMinusPMinusOneValue = _normalizedNodalVector[nbNode - _degree - 1];
+		float nodeNMinusPValue = _normalizedNodalVector[nbInterval - _degree];
 
 		float bSplineBaseBuffer;
 
 		float x, y, z;
 		Point tmpControlPoint;
 
-		for (float step = nodePValue; step <= nodeNMinusPMinusOneValue; step += stepIncrement)
+		for (float step = nodePValue; step <= nodeNMinusPValue; step += stepIncrement)
 		{
 			bSplineBaseBuffer = 0.00f;
 			x = 0.00f;
@@ -204,14 +204,14 @@ void BSpline::closeBSpline()
 void BSpline::drawControlPoints(int length)
 {
 	for (auto it = _controlPoints.begin(); it != _controlPoints.end(); ++it)
-		drawRect((*it).getX(), (*it).getY(), length);
+		drawRect((*it).getX(), (*it).getY(), static_cast<float>(length));
 }
 
 void BSpline::drawBSplineCurve()
 {
 	if (_bSplineCurve.size() >= 3)
 	{
-		for (int i = 0; i < _bSplineCurve.size(); ++i)
+		for (unsigned int i = 0; i < _bSplineCurve.size(); ++i)
 		{
 			if (i == _bSplineCurve.size() - 1)
 			{
