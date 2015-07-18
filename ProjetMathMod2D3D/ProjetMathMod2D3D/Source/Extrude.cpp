@@ -196,3 +196,31 @@ std::vector<int> Extrude::generateTriangularFacesIndex(const std::vector<Point> 
 
 	return triangluarFacesIndex;
 }
+
+void Extrude::drawCurve(std::vector<Point>& p, bool close)
+{
+	for (unsigned int i = 0; i < p.size(); ++i)
+	{
+		if (i == p.size() - 1)
+		{
+			if (close)
+				drawLine(p[i], p[0]);
+			else
+				break;
+		}
+		else
+			drawLine(p[i], p[i + 1]);
+	}
+}
+void Extrude::drawTriangle(std::vector<Point>& p)
+{
+	for (unsigned int i = 0; i < p.size(); ++i)
+	{
+		if (i == p.size() - 1)
+		{
+			drawLine(p[i], p[0]);
+		}
+		else
+			drawLine(p[i], p[i + 1]);
+	}
+}

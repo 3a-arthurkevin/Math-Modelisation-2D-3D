@@ -11,7 +11,7 @@
 #include "Point.h"
 #include "BSpline.h"
 
-class Extrude
+class Extrude : Util
 {
 	private:
 		float _accuracy;				// Précision lors de l'extrude
@@ -64,5 +64,8 @@ class Extrude
 
 		// Génération de la liste contenant l'indice des faces triangulaires à générer
 		std::vector<int> generateTriangularFacesIndex(const std::vector<Point> shape, const unsigned int width, const unsigned int height);
+
+		void drawCurve(std::vector<Point>& p, bool close = false);
+		void drawTriangle(std::vector<Point>& p);
 };
 
