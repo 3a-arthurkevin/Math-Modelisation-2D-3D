@@ -48,6 +48,8 @@ class Point
 
 		bool operator==(const Point & point);
 		bool operator!=(const Point & point);
+
+		bool isIn(Point p);
 };
 
 std::ostream & operator << (std::ostream & out, const Point & p_point);

@@ -21,7 +21,7 @@ BSpline::~BSpline()
 void BSpline::addControlPoint(const Point point)
 {
 	_controlPoints.push_back(point);
-	drawRect(point.getX(), point.getY(), 10);
+	drawRect(point, 10);
 }
 
 //Rapport le vecteur nodal sur un interface [a,b] à un interval [0,1]
@@ -204,7 +204,12 @@ void BSpline::closeBSpline()
 void BSpline::drawControlPoints(int length)
 {
 	for (auto it = _controlPoints.begin(); it != _controlPoints.end(); ++it)
-		drawRect((*it).getX(), (*it).getY(), static_cast<float>(length));
+		drawRect((*it), static_cast<float>(length));
+}
+
+void BSpline::drawControlPoint(int index, int length)
+{
+	drawRect(_controlPoints[index], static_cast<float>(length));
 }
 
 void BSpline::drawBSplineCurve()
@@ -225,4 +230,18 @@ void BSpline::drawBSplineCurve()
 		}
 	}
 	
+}
+
+bool BSpline::isControlPoint(Point p, Point *& ctrlPt)
+{
+	for (auto it = this->_controlPoints.begin(); it != this->_controlPoints.end(); ++it)
+	{
+		if ((*it).isIn(p))
+		{
+			ctrlPt = &(*it);
+			return true;
+		}
+	}
+	ctrlPt = nullptr;
+	return false;
 }

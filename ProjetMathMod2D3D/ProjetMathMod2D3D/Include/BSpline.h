@@ -125,6 +125,8 @@ class BSpline : Util
 		//Fermeture ou ouvertue de la B-Spline
 		void closeBSpline();
 
-		void drawControlPoints(int length = 5);
+		void drawControlPoints(int length = 15);
+		void drawControlPoint(int index, int length = 15);
 		void drawBSplineCurve();
+		bool isControlPoint(Point p, Point *& ctrlPt);
 };

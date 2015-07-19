@@ -152,6 +152,21 @@ bool Point::operator!=(const Point & point)
 	return (!(*this == point));
 }
 
+bool Point::isIn(Point p)
+{
+	float length = 15; //TODO : a gerer dans un futur qui n'arrivera pas
+	float xdist = this->_x - p._x;
+	float ydist = this->_y - p._y;
+
+	xdist = xdist < 0 ? -xdist : xdist;
+	ydist = ydist < 0 ? -ydist : ydist;
+
+	if (xdist <= length && ydist <= length)
+		return true;
+
+	return false;
+}
+
 std::ostream & operator << (std::ostream & out, const Point & point)
 {
 	return out << "Point data --> position(" << point.getX() << " ; " << point.getY() << " ; " << point.getZ() << ")";
