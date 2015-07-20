@@ -71,13 +71,20 @@ void BezierSurface::generateBezierSurface()
 	std::vector<Point> intermediaryBezierPoints;
 	float u, v;
 
+	int o, p;
+
 	_surfaceBezierPoints.clear();
 
 	for (int k = 0; k < _accuracy; ++k)
 	{
+		++o;
+		p = 0;
+
 		u = (k / _accuracy);
 		for (int l = 0; l < _accuracy; ++l)
 		{
+			++p;
+
 			v = (l / _accuracy);
 			for (int i = 0; i < _n + 1; ++i)
 			{
@@ -94,6 +101,17 @@ void BezierSurface::generateBezierSurface()
 			intermediaryBezierPoints.clear();
 		}
 	}
+
+	std::vector<Point> tmpPoint = _surfaceBezierPoints;
+
+	std::vector<int> indexVertices = generateTriangularFacesIndex(tmpPoint, o, p);
+	std::vector<Point> shapedToReturn;
+
+	_surfaceBezierPoints.clear();
+
+	for (auto it = indexVertices.begin(); it != indexVertices.end(); ++it)
+		shapedToReturn.push_back(tmpPoint[*it]);
+
 }
 
 std::vector<int> BezierSurface::generateTriangularFacesIndex(const std::vector<Point> shape, const unsigned int width, const unsigned int height)
