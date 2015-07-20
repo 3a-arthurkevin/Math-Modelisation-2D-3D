@@ -95,3 +95,64 @@ void BezierSurface::generateBezierSurface()
 		}
 	}
 }
+
+std::vector<int> BezierSurface::generateTriangularFacesIndex(const std::vector<Point> shape, const unsigned int width, const unsigned int height)
+{
+	/*
+	Lors de la génération des points d'une forme
+	Les points sont fait lignes par ligne c'est à dire
+
+	Exemple face composé de 2 triangles
+	._____.
+	|   / |
+	| /   |
+	._____.
+
+	On parcours ligne par ligne (on applique un -1 à width et height dans les boucles pour ne pas sortir du tableau !)
+	Opération bizarre pour obtenir les sommets parce qu'on est dans un tableau 1D contenant tous les points (pareil que pour les matrices)
+	*/
+
+	std::vector<int> triangluarFacesIndex;
+
+	int index1, index2, index3;
+
+	for (unsigned int i = 0; i < height - 2; ++i)
+	{
+		for (unsigned int j = 0; j < width - 2; ++j)
+		{
+			index1 = ((i    * (width + 1)) + j);
+			index2 = (((i + 1) * (width + 1)) + j);
+			index3 = (((i + 1) * (width + 1)) + (j + 1));
+			/*
+			(index3)
+			.
+				/ |
+			  /   |
+			._____.
+			(index1)   (index2)
+			*/
+
+			triangluarFacesIndex.push_back(index1);
+			triangluarFacesIndex.push_back(index2);
+			triangluarFacesIndex.push_back(index3);
+
+			index1 = ((i    * (width + 1)) + j);
+			index2 = (((i + 1) * (width + 1)) + (j + 1));
+			index3 = ((i    * (width + 1)) + (j + 1));
+			/*
+			(index3)   (index2)
+			._____.
+			|   /
+			| /
+			.
+			(index1)
+			*/
+
+			triangluarFacesIndex.push_back(index1);
+			triangluarFacesIndex.push_back(index2);
+			triangluarFacesIndex.push_back(index3);
+		}
+	}
+
+	return triangluarFacesIndex;
+}

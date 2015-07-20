@@ -24,5 +24,9 @@ class BezierSurface
 		Point deCaseljou(std::vector<Point> curve, float step);
 		// FOnction générant la surface de Bezier en utiliser les points de controle et la fonction deCaseljou
 		void generateBezierSurface();
+
+		// Génération de la liste contenant l'indice des faces triangulaires à générer
+		std::vector<int> generateTriangularFacesIndex(const std::vector<Point> shape, const unsigned int width, const unsigned int height);
+
 };
 
