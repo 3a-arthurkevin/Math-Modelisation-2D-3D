@@ -53,7 +53,7 @@ std::vector<Point> Extrude::simpleExtrude(const std::vector<Point> bSplineCurve,
 		}
 		++i;
 	}
-
+	
 	std::vector<int> indexVertices = generateTriangularFacesIndex(shape, bSplineCurve.size(), i);
 	std::vector<Point> shapedToReturn;
 	for (auto it = indexVertices.begin(); it != indexVertices.end(); ++it)
@@ -62,8 +62,7 @@ std::vector<Point> Extrude::simpleExtrude(const std::vector<Point> bSplineCurve,
 	}
 
 	return shapedToReturn;
-	//return shape;
-
+	
 	return shape;
 }
 
@@ -83,7 +82,7 @@ std::vector<Point> Extrude::revolvingExtrude(const std::vector<Point> bSplineCur
 	Point tmpPoint;
 	float x, y, z;
 
-	int i = 0;
+	int nbMotif = 0;
 
 	for (float teta = 0.00f; teta <= (2 * M_PI); teta += angleIncrement)
 	{
@@ -97,10 +96,10 @@ std::vector<Point> Extrude::revolvingExtrude(const std::vector<Point> bSplineCur
 
 			shape.push_back(Point(x, y, z));
 		}
-		++i;
+		++nbMotif;
 	}
-
-	std::vector<int> indexVertices = generateTriangularFacesIndex(shape, i, bSplineCurve.size());
+	
+	std::vector<int> indexVertices = generateTriangularFacesIndex(shape, bSplineCurve.size(), nbMotif);
 	std::vector<Point> shapedToReturn;
 	for (auto it = indexVertices.begin(); it != indexVertices.end(); ++it)
 	{
@@ -108,7 +107,8 @@ std::vector<Point> Extrude::revolvingExtrude(const std::vector<Point> bSplineCur
 	}
 
 	return shapedToReturn;
-	//return shape;
+	
+	return shape;
 }
 
 std::vector<Point> Extrude::generalizedExtrude(const std::vector<Point> bSplineCurve, const std::vector<Point> bSplineCurveController, const bool closedCurve)
@@ -160,7 +160,7 @@ std::vector<Point> Extrude::generalizedExtrude(const std::vector<Point> bSplineC
 	return shape;
 }
 
-std::vector<int> Extrude::generateTriangularFacesIndex(const std::vector<Point> shape, const unsigned int width, const unsigned int height)
+std::vector<int> Extrude::generateTriangularFacesIndex(const std::vector<Point> shape, const unsigned int nbMotif, const unsigned int nbPointMotif)
 {
 	/*
 		Lors de la génération des points d'une forme
@@ -172,7 +172,7 @@ std::vector<int> Extrude::generateTriangularFacesIndex(const std::vector<Point> 
 		| /   |
 		._____.
 
-		On parcours ligne par ligne (on applique un -1 à width et height dans les boucles pour ne pas sortir du tableau !)
+		On parcours ligne par ligne (on applique un -1 à nbMotif et nbPointMotif dans les boucles pour ne pas sortir du tableau !)
 		Opération bizarre pour obtenir les sommets parce qu'on est dans un tableau 1D contenant tous les points (pareil que pour les matrices)
 	*/
 
@@ -180,13 +180,13 @@ std::vector<int> Extrude::generateTriangularFacesIndex(const std::vector<Point> 
 
 	int index1, index2, index3;
 
-	for (unsigned int i = 0; i < height - 2; ++i)
+	for (unsigned int i = 0; i < nbMotif; ++i)
 	{
-		for (unsigned int j = 0; j < width - 2; ++j)
+		for (unsigned int j = 0; j < nbPointMotif; ++j)
 		{
-			index1 = ( (   i    * (width + 1)) +    j    );
-			index2 = ( ((i + 1) * (width + 1)) +    j    );
-			index3 = ( ((i + 1) * (width + 1)) + (j + 1) );
+			index1 = ( (   j    * (nbPointMotif + 1)) +    i    );
+			index2 = ( ((j + 1) * (nbPointMotif + 1)) +    i    );
+			index3 = ( ((j + 1) * (nbPointMotif + 1)) + (i + 1) );
 			/*
 			         (index3)
                         .
@@ -200,9 +200,9 @@ std::vector<int> Extrude::generateTriangularFacesIndex(const std::vector<Point> 
 			triangluarFacesIndex.push_back(index2);
 			triangluarFacesIndex.push_back(index3);
 
-			index1 = ( (   i    * (width + 1)) +    j    );
-			index2 = ( ((i + 1) * (width + 1)) + (j + 1) );
-			index3 = ( (   i    * (width + 1)) + (j + 1) );
+			index1 = ( (   j    * (nbPointMotif + 1)) +    i    );
+			index2 = ( ((j + 1) * (nbPointMotif + 1)) + (i + 1) );
+			index3 = ( (   j    * (nbPointMotif + 1)) + (i + 1) );
 			/*
 			 (index3)   (index2)
                   ._____.
