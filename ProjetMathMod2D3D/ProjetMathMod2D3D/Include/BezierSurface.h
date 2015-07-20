@@ -1,10 +1,10 @@
 #pragma once
 
 #include <vector>
-
 #include "Point.h"
+#include "util.hpp"
 
-class BezierSurface
+class BezierSurface : Util
 {
 	private :
 		float _accuracy;							// précision
@@ -27,6 +27,7 @@ class BezierSurface
 
 		// Génération de la liste contenant l'indice des faces triangulaires à générer
 		std::vector<int> generateTriangularFacesIndex(const std::vector<Point> shape, const unsigned int width, const unsigned int height);
-
+		void drawControlPoints(int length = 15);
+		void drawSurface();
 };
 
