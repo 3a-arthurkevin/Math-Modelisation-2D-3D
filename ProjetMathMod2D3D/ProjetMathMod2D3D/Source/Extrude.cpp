@@ -37,6 +37,8 @@ std::vector<Point> Extrude::simpleExtrude(const std::vector<Point> bSplineCurve,
 	Point tmpPoint;
 	float x, y, z;
 
+	int i = 0;
+
 	for (float t = 0.00f; t <= 1.00f; t+=stepIncrement)
 	{
 		for (unsigned int s = 0; s < nbPoint; ++s)
@@ -49,7 +51,18 @@ std::vector<Point> Extrude::simpleExtrude(const std::vector<Point> bSplineCurve,
 
 			shape.push_back(Point(x, y, z));
 		}
+		++i;
 	}
+
+	std::vector<int> indexVertices = generateTriangularFacesIndex(shape, bSplineCurve.size(), i);
+	std::vector<Point> shapedToReturn;
+	for (auto it = indexVertices.begin(); it != indexVertices.end(); ++it)
+	{
+		shapedToReturn.push_back(shape[*it]);
+	}
+
+	return shapedToReturn;
+	//return shape;
 
 	return shape;
 }
@@ -70,21 +83,32 @@ std::vector<Point> Extrude::revolvingExtrude(const std::vector<Point> bSplineCur
 	Point tmpPoint;
 	float x, y, z;
 
+	int i = 0;
+
 	for (float teta = 0.00f; teta <= (2 * M_PI); teta += angleIncrement)
 	{
 		for (unsigned int s = 0; s < nbPoint; ++s)
 		{
 			tmpPoint = bSplineCurve[s];
 
-			x = tmpPoint.getX() * cos(teta);
-			y = tmpPoint.getX() * sin(teta);
-			z = tmpPoint.getY();
+			z = tmpPoint.getX() * cos(teta);
+			x = tmpPoint.getX() * sin(teta);
+			y = tmpPoint.getY();
 
 			shape.push_back(Point(x, y, z));
 		}
+		++i;
 	}
 
-	return shape;
+	std::vector<int> indexVertices = generateTriangularFacesIndex(shape, i, bSplineCurve.size());
+	std::vector<Point> shapedToReturn;
+	for (auto it = indexVertices.begin(); it != indexVertices.end(); ++it)
+	{
+		shapedToReturn.push_back(shape[*it]);
+	}
+
+	return shapedToReturn;
+	//return shape;
 }
 
 std::vector<Point> Extrude::generalizedExtrude(const std::vector<Point> bSplineCurve, const std::vector<Point> bSplineCurveController, const bool closedCurve)
@@ -156,9 +180,9 @@ std::vector<int> Extrude::generateTriangularFacesIndex(const std::vector<Point> 
 
 	int index1, index2, index3;
 
-	for (unsigned int i = 0; i < height - 1; ++i)
+	for (unsigned int i = 0; i < height - 2; ++i)
 	{
-		for (unsigned int j = 0; j < width - 1; ++j)
+		for (unsigned int j = 0; j < width - 2; ++j)
 		{
 			index1 = ( (   i    * (width + 1)) +    j    );
 			index2 = ( ((i + 1) * (width + 1)) +    j    );

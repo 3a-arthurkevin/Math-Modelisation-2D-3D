@@ -79,7 +79,7 @@ void init()
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
 	glutInitWindowSize(SCREEN_WIDTH, SCREEN_HEIGHT);
 	glutInitWindowPosition(10, 10);
-	num = glutCreateWindow("Curves");
+	num = glutCreateWindow("Modélisation 2D - 3D");
 	glutMouseFunc(myMouse);
 	glutMotionFunc(myMouseMotion);
 	glutDisplayFunc(myDisplay);
@@ -90,6 +90,7 @@ void init()
 }
 void myMouse(int button, int state, int x, int y)
 {
+	//std::cout << x << " - " << y << std::endl;
 	mouseButton = button;
 	Point p = convert(Point(static_cast<float>(x), static_cast<float>(y), 0.f));
 	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
@@ -252,11 +253,11 @@ void myKeyboard(unsigned char key, int x, int y)
 		}
 		break;
 	case 'a':
-		rotation.setY(rotation.getY() + 90);
+		rotation.setY(rotation.getY() + 20/*90*/);
 		changeAxis = true;
 		break;
 	case 'z':
-		rotation.setX(rotation.getX() + 90);
+		rotation.setX(rotation.getX() + 20/*90*/);
 		break;
 	case 'q':
 		rotation.setX(0);
@@ -274,6 +275,26 @@ void myDisplay()
 	glColor3f(0.4f, 0.4f, 0.4f);
 	glClear(GL_COLOR_BUFFER_BIT);
 	glLoadIdentity();
+
+	glColor3f(1.0f, 0.0f, 0.0f);
+	glBegin(GL_LINE);
+	glVertex3f(-10.f, 0.f, 0.f);
+	glVertex3f(10.f, 0.f, 0.f);
+	glEnd();
+
+	glColor3f(0.0f, 1.0f, 0.0f);
+	glBegin(GL_LINE);
+	glVertex3f(0.f, -10.f, 0.f);
+	glVertex3f(0.f, 10.f, 0.f);
+	glEnd();
+
+	glColor3f(0.0f, 0.0f, 1.0f);
+	glBegin(GL_LINE);
+	glVertex3f(0.f, 0.f, -10.f);
+	glVertex3f(0.f, 0.f, 10.f);
+	glEnd();
+
+	glColor3f(0.4f, 0.4f, 0.4f);
 
 	gluLookAt(0, 0, zoom, 0, 0, 0, 0, 1, 0);
 	// Rotation de la Caméra
@@ -357,7 +378,7 @@ void extrudeMenu(int i)
 		sExtrude *se = new sExtrude();
 		se->ext = new Extrude();
 		se->extrudeType = std::vector<Point>();
-		se->extrudeType = se->ext->simpleExtrude((*bSplines)[bSplines->size() - 1]->getBSplineCurve(), true, 0.5);
+		se->extrudeType = se->ext->simpleExtrude((*bSplines)[bSplines->size() - 1]->getBSplineCurve(), true, 500);
 		extrudes->push_back(se);
 		modeExtSimple = true;
 		break;
@@ -412,8 +433,8 @@ void createMenu()
 	glutAddMenuEntry("End of BSpline", 1);
 	glutAddSubMenu("Create Extrude", menuExtrude);
 	glutAddMenuEntry("End of Extrude", 3);
-	glutAddMenuEntry("Rotate curve", 4);
-	glutAddMenuEntry("C0", 5);
+	//glutAddMenuEntry("Rotate curve", 4);
+	//glutAddMenuEntry("C0", 5);
 
 	glutAddMenuEntry("reset", 20);
 	glutAttachMenu(GLUT_RIGHT_BUTTON);
