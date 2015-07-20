@@ -11,7 +11,7 @@ BSpline::BSpline()
 	//_controlPoint = std::vector<Point>();
 	//_bSplineCurve = std::vector<Point>();
 
-	_closedBSpline = true;
+	_closedBSpline = false;
 }
 
 BSpline::~BSpline()

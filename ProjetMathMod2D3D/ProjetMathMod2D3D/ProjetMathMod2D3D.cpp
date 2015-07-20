@@ -253,11 +253,11 @@ void myKeyboard(unsigned char key, int x, int y)
 		}
 		break;
 	case 'a':
-		rotation.setY(rotation.getY() + 20/*90*/);
+		rotation.setY(rotation.getY() + 90);
 		changeAxis = true;
 		break;
 	case 'z':
-		rotation.setX(rotation.getX() + 20/*90*/);
+		rotation.setX(rotation.getX() + 90);
 		break;
 	case 'q':
 		rotation.setX(0);
