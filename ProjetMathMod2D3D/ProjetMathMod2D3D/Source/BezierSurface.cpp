@@ -3,9 +3,9 @@
 
 BezierSurface::BezierSurface()
 {
-	_accuracy = 10.00f;
-	_m = 3;
-	_n = 3;
+	_accuracy = 88.00f;
+	_m = 6;
+	_n = 6;
 	//_controlPoints = std::vector<Point>();
 	//_bezierPoints = std::vector<Point>();
 
@@ -20,11 +20,11 @@ BezierSurface::~BezierSurface()
 void BezierSurface::generateSurfaceControlPoints()
 {
 	int k = 1;
-	for (int i = 0; i < _n + 1; ++i)
+	for (int i = 0; i < _n; ++i)
 	{
-		for (int j = 0; j < _m + 1; ++j)
+		for (int j = 0; j < _m; ++j)
 		{
-			_surfaceControlPoints.push_back(Point(static_cast<float>(j*2), static_cast<float>(i*2), static_cast<float>(k)));
+			_surfaceControlPoints.push_back(Point(static_cast<float>(j*10), static_cast<float>(i*10), static_cast<float>(k * 20)));
 			k += (-k * 2);
 		}
 	}
@@ -71,7 +71,8 @@ void BezierSurface::generateBezierSurface()
 	std::vector<Point> intermediaryBezierPoints;
 	float u, v;
 
-	int o=0, p;
+	int o = 0;
+	int p = 0;
 
 	_surfaceBezierPoints.clear();
 
@@ -86,11 +87,11 @@ void BezierSurface::generateBezierSurface()
 			++p;
 
 			v = (l / _accuracy);
-			for (int i = 0; i < _n + 1; ++i)
+			for (int i = 0; i < _n; ++i)
 			{
 				//Récupération des points d'une ligne pour un cetrain colonne
-				for (int j = 0; j < _m + 1; ++j)
-					intermediaryRowControlPoints.push_back(_surfaceControlPoints[i + j]);
+				for (int j = 0; j < _m; ++j)
+					intermediaryRowControlPoints.push_back(_surfaceControlPoints[j + (i * _n)]);
 
 				//Ajout des points de Bezier intermédiaire
 				intermediaryBezierPoints.push_back(deCaseljou(intermediaryRowControlPoints, v));
@@ -101,7 +102,7 @@ void BezierSurface::generateBezierSurface()
 			intermediaryBezierPoints.clear();
 		}
 	}
-
+	
 	std::vector<Point> tmpPoint = _surfaceBezierPoints;
 
 	std::vector<int> indexVertices = generateTriangularFacesIndex(tmpPoint, o, p);
@@ -109,7 +110,7 @@ void BezierSurface::generateBezierSurface()
 
 	for (auto it = indexVertices.begin(); it != indexVertices.end(); ++it)
 		_surfaceBezierPoints.push_back(tmpPoint[*it]);
-
+	
 }
 
 std::vector<int> BezierSurface::generateTriangularFacesIndex(const std::vector<Point> shape, const unsigned int width, const unsigned int height)
